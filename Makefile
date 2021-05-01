@@ -4,11 +4,11 @@
 # which have been documented in detail at https://www.chessprogramming.org/
 # and demonstrated via the very strong open-source chess engine Stockfish...
 # https://github.com/official-stockfish/Stockfish.
-#  
+#
 # Fire is free software: you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or any later version.
-# 
+#
 # You should have received a copy of the GNU General Public License with
 # this program: copying.txt.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -27,7 +27,7 @@ OBJS =
 	evaluate.o hash.o bitbase/kpk.o main.o material.o movegen.o \
 	movepick.o pawn.o util/perft.o position.o pst.o random/random.o search.o \
 	sfactor.o egtb/tbprobe.o thread.o tune/tune.o uci.o util/util.o zobrist.o \
-	
+
 optimize = yes
 debug = no
 bits = 32
@@ -56,6 +56,7 @@ endif
 CXXFLAGS += -Wcast-qual -fno-exceptions $(EXTRACXXFLAGS)
 DEPENDFLAGS += -std=c++17
 LDFLAGS += $(EXTRALDFLAGS)
+
 CC = gcc
 
 ifeq ($(COMP),)
@@ -70,6 +71,9 @@ endif
 
 ifeq ($(COMP),mingw)
 	comp=mingw
+	#LDFLAGS += -lgcov
+	CXXFLAGS += -flto -mavx2
+
 
 	ifeq ($(UNAME),Linux)
 		ifeq ($(bits),64)
@@ -193,11 +197,11 @@ help:
 	@echo "Supported compilers:"
 	@echo "gcc                     > Gnu compiler (default)"
 	@echo "mingw                   > Gnu compiler with MinGW under Windows"
-	@echo ""	
-	@echo "make build ARCH=x86-64-popc
-	@echo "make build ARCH=x86-64-pext	
 	@echo ""
-	@echo "make profile-build ARCH=x86-64-popc"	
+	@echo "make build ARCH=x86-64-popc
+	@echo "make build ARCH=x86-64-pext
+	@echo ""
+	@echo "make profile-build ARCH=x86-64-popc"
 	@echo "make profile-build ARCH=x86-64-pext"
 	@echo ""
 
@@ -297,18 +301,18 @@ gcc-profile-clean:
 	@rm -rf *.gcda
 	@rm -rf *.o
 	@rm -rf bitbase/*.gcda
-	@rm -rf bitbase/*.o	
+	@rm -rf bitbase/*.o
 	@rm -rf egtb/*.gcda
-	@rm -rf egtb/*.o	
+	@rm -rf egtb/*.o
 	@rm -rf macro/*.gcda
 	@rm -rf macro/*.o
 	@rm -rf random/*.gcda
-	@rm -rf random/*.o	
+	@rm -rf random/*.o
 	@rm -rf tune/*.gcda
 	@rm -rf tune/*.o
 	@rm -rf util/*.gcda
 	@rm -rf util/*.o
-	
+
 .depend:
 	-@$(CXX) $(DEPENDFLAGS) -MM $(OBJS:.o=.cpp) $(COBJS:.o=.c) > $@ 2> /dev/null
 
